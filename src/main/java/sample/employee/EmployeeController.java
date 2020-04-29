@@ -42,29 +42,27 @@ public class EmployeeController {
     private Pattern SALARY_PATTERN = Pattern.compile("(\\d+)?;(\\d+)?");
 
     private Criteria parseSalaryFilter(DataTablesInput input) {
-        return input.getColumns().stream()
-            .filter(column -> column.getData().equalsIgnoreCase("salary"))
-                .findFirst()
+        return input.getColumn("salary")
                 .map(column -> {
-            String salaryFilter = column.getSearch().getValue();
-            Matcher matcher = SALARY_PATTERN.matcher(salaryFilter);
-            if (!matcher.matches()) {
-                return null;
-            }
-            String minSalary = matcher.group(1);
-            String maxSalary = matcher.group(2);
-            if (minSalary == null && maxSalary == null) {
-                return null;
-            }
-            Criteria criteria = where("salary");
-            if (minSalary != null) {
-                criteria.gte(Integer.parseInt(minSalary));
-            }
-            if (maxSalary != null) {
-                criteria.lte(Integer.parseInt(maxSalary));
-            }
-            return criteria;
-        }).orElse(null);
+                    String salaryFilter = column.getSearch().getValue();
+                    Matcher matcher = SALARY_PATTERN.matcher(salaryFilter);
+                    if (!matcher.matches()) {
+                        return null;
+                    }
+                    String minSalary = matcher.group(1);
+                    String maxSalary = matcher.group(2);
+                    if (minSalary == null && maxSalary == null) {
+                        return null;
+                    }
+                    Criteria criteria = where("salary");
+                    if (minSalary != null) {
+                        criteria.gte(Integer.parseInt(minSalary));
+                    }
+                    if (maxSalary != null) {
+                        criteria.lte(Integer.parseInt(maxSalary));
+                    }
+                    return criteria;
+                }).orElse(null);
     }
 
 }
